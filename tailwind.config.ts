@@ -11,6 +11,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        aliceblack: {
+          100: "#F8F9FF",
+          200: "#919EAB",
+        }
       },
     },
   },
