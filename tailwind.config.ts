@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss";
+import type {Config} from "tailwindcss";
 
 export default {
   content: [
@@ -11,10 +11,11 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        aliceblack: {
+        alice: {
           100: "#F8F9FF",
           200: "#919EAB",
-        }
+          300: "#2F2559",
+        },
       },
     },
   },
