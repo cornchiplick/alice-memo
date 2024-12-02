@@ -4,12 +4,12 @@ interface SideMenuItemProps {
   menu: {
     icon: React.ReactNode;
     title: string;
-    isActive?: boolean;
   };
+  isActive?: boolean;
 }
 
-const SideMenuItem = ({menu}: SideMenuItemProps) => {
-  const {icon, title, isActive = false} = menu;
+const SideMenuItem = ({menu, isActive = false}: SideMenuItemProps) => {
+  const {icon, title} = menu;
 
   return (
     <div

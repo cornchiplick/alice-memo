@@ -1,3 +1,7 @@
+"use client";
+
+import {URL} from "@/constants/constants";
+import usePathList from "@/hook/usePathList";
 import ArchiveIcon from "@/public/icons/ArchiveIcon";
 import CalendarIcon from "@/public/icons/CalendarIcon";
 import FlowIcon from "@/public/icons/FlowIcon";
@@ -10,22 +14,27 @@ const SIDE_MENU_LIST = [
   {
     icon: <MemoIcon />,
     title: "Memo",
+    path: URL.MEMO,
   },
   {
     icon: <MedalIcon />,
     title: "Goal",
+    path: URL.GOAL,
   },
   {
     icon: <FlowIcon />,
     title: "Flow",
+    path: URL.FLOW,
   },
   {
     icon: <CalendarIcon />,
     title: "Calendar",
+    path: URL.CALENDAR,
   },
   {
     icon: <ArchiveIcon />,
     title: "Archive",
+    path: URL.ARCHIVE,
   },
 ];
 
@@ -35,6 +44,8 @@ const Sidebar = () => {
     name: "Alice Herta",
     email: "alice@gmail.com",
   };
+  const {pathList} = usePathList();
+  const [baseMenu] = pathList;
 
   return (
     <div className="bg-alice-300 flex h-screen w-[18.2%] flex-col">
@@ -45,7 +56,7 @@ const Sidebar = () => {
         <UserInfo user={temp} />
         <div className="flex h-full flex-col gap-4">
           {SIDE_MENU_LIST.map((item) => (
-            <SideMenuItem key={item.title} menu={item} />
+            <SideMenuItem key={item.title} menu={item} isActive={baseMenu === item.path} />
           ))}
         </div>
       </div>
