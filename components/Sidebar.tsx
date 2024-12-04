@@ -7,6 +7,7 @@ import CalendarIcon from "@/public/icons/CalendarIcon";
 import FlowIcon from "@/public/icons/FlowIcon";
 import MedalIcon from "@/public/icons/MedalIcon";
 import MemoIcon from "@/public/icons/MemoIcon";
+import Link from "next/link";
 import SideMenuItem from "./SideMenuItem";
 import UserInfo from "./UserInfo";
 
@@ -48,9 +49,11 @@ const Sidebar = () => {
   const [baseMenu] = pathList;
 
   return (
-    <div className="bg-alice-300 flex h-screen w-[18.2%] flex-col">
+    <div className="flex h-screen w-[18.2%] flex-col bg-alice-300">
       <div className="flex h-[8.06%] w-full flex-col items-center justify-center border-b border-b-gray-100">
-        logo area
+        <Link href={URL.HOME}>
+          <p>logo area (to home)</p>
+        </Link>
       </div>
       <div className="flex h-screen w-full flex-col gap-11 px-3 py-10">
         <UserInfo user={temp} />
