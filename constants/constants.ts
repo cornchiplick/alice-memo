@@ -6,8 +6,3 @@ export const URL = {
   CALENDAR: "/calendar",
   ARCHIVE: "/archive",
 };
-
-export const COOKIE = {
-  ALICE_MEMO_ALL: "ALICE_MEMO_ALL",
-  ALICE_MEMO_ITEM: "ALICE_MEMO_ITEM",
-};
