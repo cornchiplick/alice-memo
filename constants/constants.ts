@@ -6,3 +6,8 @@ export const URL = {
   CALENDAR: "/calendar",
   ARCHIVE: "/archive",
 };
+
+export const Constants = {
+  ALICE_MEMO_ITEM: "ALICE_MEMO_ITEM",
+  ALICE_MEMO_ALL: "ALICE_MEMO_ALL",
+};
