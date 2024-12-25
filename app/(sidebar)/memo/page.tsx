@@ -2,19 +2,11 @@
 
 import {Constants} from "@/constants/constants";
 import {generateUUID} from "@/utils/utils";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 const MemoHome = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [allMemo, setAllMemo] = useState<string[]>([]);
-
-  useEffect(() => {
-    const memoAll = localStorage.getItem(Constants.ALICE_MEMO_ALL) || "";
-    let memoArray = [];
-    if (!!memoAll) {
-      memoArray = JSON.parse(memoAll);
-      setAllMemo(memoArray);
-    }
-  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -40,12 +32,26 @@ const MemoHome = () => {
     memoArray.push(itemKey);
     localStorage.setItem(Constants.ALICE_MEMO_ALL, JSON.stringify(memoArray));
     setAllMemo(memoArray);
+
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   };
+
+  useEffect(() => {
+    const memoAll = localStorage.getItem(Constants.ALICE_MEMO_ALL) || "";
+    let memoArray = [];
+    if (!!memoAll) {
+      memoArray = JSON.parse(memoAll);
+      setAllMemo(memoArray);
+    }
+  }, []);
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <input
+          ref={inputRef}
           required
           type="text"
           placeholder="content"
