@@ -6,9 +6,5 @@ export const generateUUID = (prefix: string = "") => {
     return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
   });
 
-  if (prefix.length >= 4) {
-    return uuid;
-  } else {
-    return prefix + uuid.substring(0, uuid.length - prefix.length);
-  }
+  return prefix + uuid.substring(0, uuid.length - prefix.length);
 };

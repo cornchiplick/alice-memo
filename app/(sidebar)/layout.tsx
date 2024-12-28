@@ -2,7 +2,7 @@ import Sidebar from "@/components/Sidebar";
 
 const SidebarLayout = ({children}: {children: React.ReactNode}) => {
   return (
-    <div aria-label="werwer" className="flex flex-row">
+    <div className="flex w-full flex-row">
       <Sidebar />
       {children}
     </div>

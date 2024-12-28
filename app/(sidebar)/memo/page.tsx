@@ -1,42 +1,12 @@
 "use client";
 
+import MemoForm from "@/components/MemoForm";
 import {Constants} from "@/constants/constants";
-import {generateUUID} from "@/utils/utils";
-import {useEffect, useRef, useState} from "react";
+import {Memo} from "@/types/memo/Memo";
+import {useEffect, useState} from "react";
 
 const MemoHome = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [allMemo, setAllMemo] = useState<string[]>([]);
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const content = formData.get("content")?.toString() || "";
-
-    const uuid = generateUUID();
-    const itemKey = `${Constants.ALICE_MEMO_ITEM}_${uuid}`;
-
-    localStorage.setItem(itemKey, content);
-
-    const memoAll = localStorage.getItem(Constants.ALICE_MEMO_ALL) || "";
-
-    let memoArray = [];
-    if (memoAll) {
-      try {
-        memoArray = JSON.parse(memoAll);
-      } catch (e) {
-        console.error("Failed to parse ALICE_MEMO_ALL storage: ", e);
-      }
-    }
-
-    memoArray.push(itemKey);
-    localStorage.setItem(Constants.ALICE_MEMO_ALL, JSON.stringify(memoArray));
-    setAllMemo(memoArray);
-
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
-  };
+  const [allMemo, setAllMemo] = useState<Memo[]>([]);
 
   useEffect(() => {
     const memoAll = localStorage.getItem(Constants.ALICE_MEMO_ALL) || "";
@@ -48,23 +18,15 @@ const MemoHome = () => {
   }, []);
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          ref={inputRef}
-          required
-          type="text"
-          placeholder="content"
-          name="content"
-          className="rounded-md border-none bg-transparent"
-        />
-        <button type="submit">추가</button>
-      </form>
+    <div className="w-full">
+      <MemoForm setAllMemo={setAllMemo} />
       <div>
         <h2>All Memos</h2>
-        {allMemo.map((memo) => (
-          <MemoComp key={memo} memoKey={memo} />
-        ))}
+        <div className="flex flex-col gap-2">
+          {allMemo.map((memo) => (
+            <MemoComp key={memo.id} memo={memo} />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -72,8 +34,21 @@ const MemoHome = () => {
 
 export default MemoHome;
 
-const MemoComp = ({memoKey}: {memoKey: string}) => {
-  const content = localStorage.getItem(memoKey) || "";
-
-  return <div>{`${memoKey}: ${content}`}</div>;
+const MemoComp = ({memo}: {memo: Memo}) => {
+  return (
+    <div className="border border-gray-400 p-1">
+      <p>
+        <span className="text-red-400">id : </span>
+        <span>{memo.id}</span>
+      </p>
+      <p>
+        <span className="text-red-400">title : </span>
+        <span>{memo.title}</span>
+      </p>
+      <p>
+        <span className="text-red-400">content : </span>
+        <span>{memo.content}</span>
+      </p>
+    </div>
+  );
 };
