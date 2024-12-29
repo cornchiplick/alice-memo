@@ -2,7 +2,7 @@
 
 import MemoForm from "@/components/MemoForm";
 import {Constants} from "@/constants/constants";
-import {Memo} from "@/types/memo/Memo";
+import {Memo} from "@/types/memo/memo";
 import {useEffect, useState} from "react";
 
 const MemoHome = () => {
