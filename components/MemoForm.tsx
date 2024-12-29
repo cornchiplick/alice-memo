@@ -2,7 +2,7 @@
 
 import {memoSchema} from "@/app/(sidebar)/memo/schema";
 import {Constants} from "@/constants/constants";
-import {MemoFormData, MemoFormProps} from "@/types/memo/Memo";
+import {MemoFormData, MemoFormProps} from "@/types/memo/memo";
 import {generateUUID} from "@/utils/utils";
 import {useState} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
