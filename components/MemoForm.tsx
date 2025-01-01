@@ -1,7 +1,7 @@
 "use client";
 
-import {MemoFormDataType, memoSchema} from "@/app/(sidebar)/memo/schema";
 import {Constants} from "@/constants/constants";
+import {MemoFormDataType, memoSchema} from "@/schemas/memo/schema";
 import {MemoFormProps} from "@/types/memo/memo";
 import {generateUUID} from "@/utils/utils";
 import {zodResolver} from "@hookform/resolvers/zod";
