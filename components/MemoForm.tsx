@@ -1,58 +1,72 @@
 "use client";
 
-import {memoSchema} from "@/app/(sidebar)/memo/schema";
+import {MemoFormDataType, memoSchema} from "@/app/(sidebar)/memo/schema";
 import {Constants} from "@/constants/constants";
-import {MemoFormData, MemoFormProps} from "@/types/memo/memo";
+import {MemoFormProps} from "@/types/memo/memo";
 import {generateUUID} from "@/utils/utils";
+import {zodResolver} from "@hookform/resolvers/zod";
 import {useState} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
+import Input from "./Input";
 
 const MemoForm = ({setAllMemo}: MemoFormProps) => {
   const [showForm, setShowForm] = useState<boolean>(false);
-  const {register, reset, handleSubmit} = useForm<MemoFormData>();
+  const {
+    register,
+    reset,
+    getValues,
+    handleSubmit,
+    formState: {errors},
+  } = useForm<MemoFormDataType>({
+    resolver: zodResolver(memoSchema),
+    defaultValues: {
+      title: "",
+      content: "",
+    },
+  });
 
   const handleFocus = () => {
     setShowForm(true);
   };
 
-  const save: SubmitHandler<MemoFormData> = async (data) => {
+  const save: SubmitHandler<MemoFormDataType> = async (data) => {
     const result = memoSchema.safeParse(data);
-    if (!result.success) {
-      return result.error.flatten();
-    } else {
-      const uuid = generateUUID(`${Constants.ALICE_MEMO_ITEM}_`);
-      const memo = {
-        id: uuid,
-        ...result.data,
-      };
+    const uuid = generateUUID(`${Constants.ALICE_MEMO_ITEM}_`);
+    const memo = {
+      id: uuid,
+      ...result.data,
+    };
 
-      const memoAll = localStorage.getItem(Constants.ALICE_MEMO_ALL) || "";
+    const memoAll = localStorage.getItem(Constants.ALICE_MEMO_ALL) || "";
 
-      let memoArray = [];
-      if (memoAll) {
-        try {
-          memoArray = JSON.parse(memoAll);
-        } catch (e) {
-          console.error("Failed to parse ALICE_MEMO_ALL storage: ", e);
-          localStorage.removeItem(Constants.ALICE_MEMO_ALL);
-          return;
-        }
+    let memoArray = [];
+    if (memoAll) {
+      try {
+        memoArray = JSON.parse(memoAll);
+      } catch (e) {
+        console.error("Failed to parse ALICE_MEMO_ALL storage: ", e);
+        localStorage.removeItem(Constants.ALICE_MEMO_ALL);
+        return;
       }
-
-      memoArray.push(memo);
-      localStorage.setItem(Constants.ALICE_MEMO_ALL, JSON.stringify(memoArray));
-      reset({
-        title: "",
-        content: "",
-      });
-      setAllMemo(memoArray);
     }
+
+    memoArray.push(memo);
+    localStorage.setItem(Constants.ALICE_MEMO_ALL, JSON.stringify(memoArray));
+    reset();
+    setAllMemo(memoArray);
   };
 
   const handleBlur = async (event: React.FocusEvent<HTMLDivElement>) => {
     if (!event.currentTarget.contains(event.relatedTarget as Node)) {
-      await handleSubmit(save)();
-      setShowForm(false);
+      const data = getValues();
+      const result = memoSchema.safeParse(data);
+      if (!result.success) {
+        await handleSubmit(save)();
+        return;
+      } else {
+        await handleSubmit(save)();
+        setShowForm(false);
+      }
     }
   };
 
@@ -61,22 +75,21 @@ const MemoForm = ({setAllMemo}: MemoFormProps) => {
       <div
         className="flex w-full flex-col items-center justify-center gap-2 py-5"
         onBlur={handleBlur}>
-        <input
+        <Input
           {...register("title", {required: true})}
           required
           type="text"
           placeholder={showForm ? "title" : "Write memo..."}
-          defaultValue={""}
+          errors={[errors.title?.message ?? ""]}
           onFocus={handleFocus}
-          className="h-11 w-[600px] rounded-lg border border-solid border-alice-500 bg-transparent text-base font-semibold"
         />
         {showForm && (
-          <input
+          <Input
             {...register("content", {required: true})}
             required
             type="text"
             placeholder="content"
-            className="h-11 w-[600px] rounded-lg border border-solid border-alice-500 bg-transparent text-base font-semibold"
+            errors={[errors.content?.message ?? ""]}
           />
         )}
       </div>

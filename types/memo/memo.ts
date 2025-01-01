@@ -7,8 +7,3 @@ export interface Memo {
 export interface MemoFormProps {
   setAllMemo: React.Dispatch<React.SetStateAction<Memo[]>>;
 }
-
-export interface MemoFormData {
-  title: string;
-  content: string;
-}
