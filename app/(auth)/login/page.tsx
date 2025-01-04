@@ -2,6 +2,7 @@
 
 import Input from "@/components/Input";
 import {signIn} from "next-auth/react";
+import {redirect} from "next/navigation";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
@@ -23,14 +24,15 @@ export default function LogIn() {
   } = useForm<RegisterType>();
 
   const login = async (data: RegisterType) => {
-    const result = await signIn("credentials", {...data, callbackUrl: "/memo"});
+    const result = await signIn("credentials", {
+      ...data,
+      redirect: false,
+    });
 
     if (result?.ok) {
-      console.log("login success!!");
+      redirect("/memo");
     } else {
-      console.log("login fail!!");
       setError(true);
-      // redirect("/login");
     }
   };
 
