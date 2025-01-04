@@ -1,13 +1,10 @@
 "use client";
 
 import Input from "@/components/Input";
-// import Button from "@/components/button";
-// import Input from "@/components/input";
-// import SocialLogin from "@/components/social-login";
-// import {PASSWORD_MIN_LENGTH} from "@/lib/constants";
+import {signIn} from "next-auth/react";
+import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-// import {login} from "./actions";
 
 const registerSchema = z.object({
   email: z.string().trim().email().min(50),
@@ -17,6 +14,8 @@ const registerSchema = z.object({
 type RegisterType = z.infer<typeof registerSchema>;
 
 export default function LogIn() {
+  const [error, setError] = useState(false);
+
   const {
     formState: {errors},
     handleSubmit,
@@ -24,13 +23,22 @@ export default function LogIn() {
   } = useForm<RegisterType>();
 
   const login = async (data: RegisterType) => {
-    console.log("data : ", data);
+    const result = await signIn("credentials", {...data, callbackUrl: "/memo"});
+
+    if (result?.ok) {
+      console.log("login success!!");
+    } else {
+      console.log("login fail!!");
+      setError(true);
+      // redirect("/login");
+    }
   };
 
   return (
     <div className="flex flex-col gap-10 px-5 py-8">
       <div className="flex flex-col gap-2 *:font-medium">
         <h1 className="text-2xl">안녕하세요!</h1>
+        {error && <h2 className="text-xl">이메일과 비밀번호를 확인해주세요.</h2>}
         <h2 className="text-xl">Log in with email and password.</h2>
       </div>
       <form onSubmit={handleSubmit(login)} className="flex flex-col gap-3">
