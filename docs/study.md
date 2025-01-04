@@ -7,4 +7,11 @@
   - `npm install @hookform/resolvers zod`
 - prisma 추가 + init
   - `npm install prisma`
+  - `npm install @prisma/client`
   - `npx prisma init`
+  - 생성된 `schema.prisma` 파일 확인
+  - `npx prisma generate` : Prisma Client 생성
+  - `db.ts` 파일 작성
+  - 이후 `schema.prisma` 파일에 model 작성 후 migrate 하기
+  - `npx prisma migrate dev`
+  - 이후 별도로 model 을 확인하고 싶으면 `npx prisma studio` (=`localhost:5555`)에서 확인 가능
