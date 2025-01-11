@@ -1,36 +1,34 @@
 "use client";
 
+import Button from "@/components/Button";
 import Input from "@/components/Input";
+import {URL} from "@/constants/constants";
+import {zodResolver} from "@hookform/resolvers/zod";
 import {signIn} from "next-auth/react";
 import {redirect} from "next/navigation";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
-import {z} from "zod";
-
-const registerSchema = z.object({
-  email: z.string().trim().email().min(50),
-  password: z.string().trim().min(10),
-});
-
-type RegisterType = z.infer<typeof registerSchema>;
+import {authenticationSchema, AuthenticationType} from "./schema";
 
 export default function LogIn() {
   const [error, setError] = useState(false);
 
   const {
-    formState: {errors},
+    formState: {errors, isSubmitting},
     handleSubmit,
     register,
-  } = useForm<RegisterType>();
+  } = useForm<AuthenticationType>({
+    resolver: zodResolver(authenticationSchema),
+  });
 
-  const login = async (data: RegisterType) => {
-    const result = await signIn("credentials", {
+  const login = async (data: AuthenticationType) => {
+    const authorization = await signIn("credentials", {
       ...data,
       redirect: false,
     });
 
-    if (result?.ok) {
-      redirect("/memo");
+    if (!!authorization?.ok) {
+      redirect(URL.MEMO);
     } else {
       setError(true);
     }
@@ -61,8 +59,7 @@ export default function LogIn() {
           minLength={10}
           errors={[errors.password?.message ?? ""]}
         />
-        <button>Log in</button>
-        {/* <Button text="Log in" /> */}
+        <Button text="Log in" disabled={isSubmitting} />
       </form>
       {/* <SocialLogin /> */}
     </div>
