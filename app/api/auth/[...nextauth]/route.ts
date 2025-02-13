@@ -3,6 +3,12 @@ import {userSchema} from "@/types/user/user";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+interface SessionUser {
+  id: string;
+  email: string;
+  username: string;
+}
+
 const handler = NextAuth({
   // pages: {
   //   signIn: "/login",
@@ -52,6 +58,29 @@ const handler = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    async jwt({token, user}) {
+      console.log("token : ", token);
+      console.log("user : ", user);
+      if (user) {
+        token.user = user;
+      }
+      return Promise.resolve(token);
+    },
+    async session({session, token}) {
+      session.user = token.user as SessionUser;
+
+      // if (session.user != null && token.hasAcceptedTerms != null) {
+      //   session.user.hasAcceptedTerms = token?.hasAcceptedTerms;
+      // }
+      return Promise.resolve(session);
+
+      // if (token) {
+      //   // session.user!.id! = token.id;
+      // }
+      return session;
+    },
+  },
 });
 
 export {handler as GET, handler as POST};

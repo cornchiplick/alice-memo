@@ -7,6 +7,7 @@ import CalendarIcon from "@/public/icons/CalendarIcon";
 import FlowIcon from "@/public/icons/FlowIcon";
 import MedalIcon from "@/public/icons/MedalIcon";
 import MemoIcon from "@/public/icons/MemoIcon";
+import {signOut} from "next-auth/react";
 import Link from "next/link";
 import SideMenuItem from "./SideMenuItem";
 import UserInfo from "./UserInfo";
@@ -39,7 +40,11 @@ const SIDE_MENU_LIST = [
   },
 ];
 
-const Sidebar = () => {
+interface SidebarProps {
+  status: "authenticated" | "loading" | "unauthenticated";
+}
+
+const Sidebar = ({status}: SidebarProps) => {
   // FIX 임시 값이므로 추후 수정 필요
   const temp = {
     name: "Alice Herta",
@@ -48,12 +53,20 @@ const Sidebar = () => {
   const {pathList} = usePathList();
   const [baseMenu] = pathList;
 
+  const handleLogout = () => {
+    signOut();
+  };
+
   return (
     <div className="flex h-screen w-[18.2%] flex-col bg-alice-300">
       <div className="flex h-[8.06%] w-full flex-col items-center justify-center border-b border-b-gray-100">
-        <Link href={URL.HOME}>
-          <p>logo area (to home)</p>
-        </Link>
+        {status === "unauthenticated" ? (
+          <Link href={URL.HOME}>
+            <p>logo area (to home)</p>
+          </Link>
+        ) : (
+          <button onClick={handleLogout}>logout</button>
+        )}
       </div>
       <div className="flex h-screen w-full flex-col gap-11 px-3 py-10">
         <UserInfo user={temp} />
